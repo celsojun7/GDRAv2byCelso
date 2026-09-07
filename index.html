@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDRA v2 by Celso</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#f1f5f9;color:#0f172a;padding:12px;transition:.3s}
+.card{background:#fff;border-radius:16px;padding:20px;border:1px solid #cbd5e1;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #cbd5e1;padding-bottom:12px;margin-bottom:16px}
+h2{font-size:11px;color:#1e40af;margin:22px 0 10px;font-weight:800;border-left:4px solid #94a3b8;padding-left:8px;text-transform:uppercase}
+label{font-size:10px;color:#475569;margin:10px 0 4px;display:block;font-weight:700;text-transform:uppercase}
+input,textarea{width:100%;padding:11px 12px;border-radius:9px;border:1.5px solid #cbd5e1;font-size:14px;background:#fff;color:#0f172a}
+::placeholder{color:#94a3b8; font-style:italic; font-size:12px; opacity:1}
+input:focus::placeholder{color:#cbd5e1}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.item{border:1px solid #cbd5e1;border-radius:12px;padding:14px;margin-bottom:10px;background:#f8fafc}
+.switch{width:44px;height:24px;background:#cbd5e1;border-radius:20px;position:relative;cursor:pointer}.switch.on{background:#16a34a}
+.switch:after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}.switch.on:after{left:23px}
+.detalhe{margin-top:12px;background:#fff;padding:12px;border-radius:10px;border:1px solid #cbd5e1;display:none}.detalhe.show{display:block}
+.total{background:#1e40af;color:#fff;font-size:26px;font-weight:900;text-align:center;border-radius:12px;padding:12px;margin-top:8px}
+.conf{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #cbd5e1;border-radius:10px;margin-bottom:8px;background:#f8fafc;cursor:pointer;font-size:13px;font-weight:600}
+.conf input{width:19px;height:19px;accent-color:#1e40af}
+.btn{width:100%;padding:16px;border:none;border-radius:12px;font-weight:800;font-size:14px;margin-top:16px;cursor:pointer;text-transform:uppercase;background:#1e40af;color:#fff}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+#dataAbate{border:2px dashed #ef4444!important}#prevista{border:2px dashed #f59e0b!important}
+.sobra{border:2px dashed #22c55e!important;background:#f0fdf4!important;border-radius:12px;padding:12px;margin-top:12px}
+#btnTheme{border:1px solid #cbd5e1;background:#fff;width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:18px}
+body.dark{background:#0f172a;color:#e2e8f0}
+body.dark .card{background:#1e293b;border-color:#334155}
+body.dark input, body.dark textarea{background:#0f172a;border-color:#334155;color:#e2e8f0}
+body.dark .item{background:#1e293b;border-color:#334155}
+body.dark .conf{background:#1e293b;border-color:#334155}
+body.dark .detalhe{background:#0f172a;border-color:#334155}
+body.dark .sobra{background:#0f172a!important;border-color:#334155!important}
+body.dark label{color:#94a3b8}
+body.dark h2{color:#93c5fd}
+body.dark .header{border-color:#334155}
+body.dark #btnTheme{background:#1e293b;border-color:#334155;color:#fff}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="header"><div><b><span style="color:#16a34a; font-size:18px">GDRA v2 by Celso</span></b><br><small style="font-size:10px;color:#64748b">Empresa: 2143 JBS S.A - UNIDADE CDT</small></div><div style="display:flex;gap:8px;align-items:center"><button id="btnTheme" onclick="toggleTheme()">🌙</button><small style="color:#fff;font-weight:800;background:#16a34a;padding:4px 8px;border-radius:6px">VERSÃO 2.0</small></div></div>
+<h2>1. DADOS DA OPERAÇÃO</h2>
+<label>Data do Abate * OBRIGATÓRIO</label><input type="date" id="dataAbate">
+<label>Qtde. Prevista em Escala * OBRIGATÓRIO</label><input type="number" id="prevista" min="0" oninput="if(this.value<0)this.value=0" placeholder="Ex: 1500">
+<div class="row"><div><label>QTDE. DE FÊMEAS RECEBIDAS</label><input type="number" id="femeas" min="0" oninput="if(this.value<0)this.value=0;calc()" placeholder="0"></div><div><label>QTDE. DE MACHOS RECEBIDOS</label><input type="number" id="machos" min="0" oninput="if(this.value<0)this.value=0;calc()" placeholder="0"></div></div>
+<div class="row"><div><label>QTDE. DE CURRAIS UTILIZADOS</label><input type="number" id="curraisUsados" min="0" oninput="if(this.value<0)this.value=0" placeholder="Ex: 12"></div><div><label>QTDE. DE LOTES</label><input type="number" id="qtdLotes" min="0" oninput="if(this.value<0)this.value=0" placeholder="Ex: 25"></div></div>
+<div class="sobra"><label style="color:#16a34a;margin:0 0 6px">SOBRAS DO ABATE ANTERIOR</label><input type="number" id="sobras" min="0" oninput="if(this.value<0)this.value=0;calc()" placeholder="0"></div>
+<label>TOTAL DE ANIMAIS NOS CURRAIS</label><div class="total" id="total">0</div>
+<div class="row" style="margin-top:12px"><div><label>HORÁRIO DE CHEGADA DO 1º VEÍCULO</label><input type="time" id="primeiro" value="00:00"></div><div><label>HORÁRIO DE CHEGADA DO ÚLTIMO VEÍCULO</label><input type="time" id="ultimo" value="00:00"></div></div>
+<h2>2. OCORRÊNCIAS</h2><div id="lista"></div>
+<h2>3. DOCUMENTAÇÃO</h2>
+<label class="conf"><input type="checkbox" id="c1" checked> DOCUMENTAÇÃO DO SIF</label>
+<label class="conf"><input type="checkbox" id="c2" checked> DOCUMENTAÇÃO DA ORIGINAÇÃO/COMPRA DE GADO</label>
+<label class="conf"><input type="checkbox" id="c3" checked> DOCUMENTAÇÃO DA GQ</label>
+<label class="conf"><input type="checkbox" id="c4" checked> DOCUMENTAÇÃO DO CURRAL</label>
+<h2>4. RESPONSÁVEL</h2><input id="resp" value="CELSOJUNIOR-CDT">
+<label>Observações</label><textarea id="obs" rows="4">TODO O MANEJO E DESCARREGAMENTO FOI REALIZADO COM FOCO NO BEM-ESTAR ANIMAL, RESPEITANDO AS NORMAS DE BEA.</textarea>
+<button class="btn" onclick="gerarPDF()">GERAR RELATÓRIO</button>
+
+
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const lista=[{id:'emerg',nome:'ABATE DE EMERGÊNCIA',tipo:'LOTE'},{id:'human',nome:'NECROPSIA | INCINERAÇÃO',tipo:'LOTE'},{id:'mortos',nome:'ANIMAIS MORTOS NO TRANSPORTE',tipo:'LOTE'},{id:'naoRec',nome:'ANIMAIS NÃO RECEBIDOS',tipo:'MOTIVO'},{id:'antec',nome:'ANIMAIS ANTECIPADOS',tipo:'MOTIVO'},{id:'fora',nome:'ANIMAIS FORA DA ESCALA',tipo:'MOTIVO'}];
+let est={};lista.forEach(o=>est[o.id]={on:false,qtd:'',forn:'',lote:'',motivo:''});
+function render(){
+  let h='';
+  lista.forEach(o=>{
+    let s=est[o.id];
+    h+=`<div class="item"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">${o.nome}</b><div class="switch ${s.on?'on':''}" onclick="toggle('${o.id}')"></div></div><div class="detalhe ${s.on?'show':''}"><div class="grid3"><div><label>QTDE.</label><input type="number" min="0" placeholder="EX: 3" value="${s.qtd}" oninput="est['${o.id}'].qtd=this.value;calc()"></div><div><label>FORNECEDOR</label><input placeholder="EX: FAZENDA SANTA MARIA" value="${s.forn}" oninput="this.value=this.value.toUpperCase(); est['${o.id}'].forn=this.value"></div><div><label>${o.tipo=='LOTE'?'LOTE':'MOTIVO'}</label><input placeholder="${o.tipo=='LOTE'?'EX: 15':'EX: TRANSPORTE, DOCUMENTAÇÃO'}" value="${o.tipo=='LOTE'?s.lote:s.motivo}" oninput="this.value=this.value.toUpperCase(); est['${o.id}'].${o.tipo=='LOTE'?'lote':'motivo'}=this.value"></div></div></div></div>`
+  });
+  document.getElementById('lista').innerHTML=h;
+}
+function toggle(id){est[id].on=!est[id].on;render();calc();}
+function calc(){
+  let f=parseInt(document.getElementById('femeas').value)||0,m=parseInt(document.getElementById('machos').value)||0,s=parseInt(document.getElementById('sobras').value)||0;
+  let qE=est['emerg'].on?parseInt(est['emerg'].qtd)||0:0,qH=est['human'].on?parseInt(est['human'].qtd)||0:0,qM=est['mortos'].on?parseInt(est['mortos'].qtd)||0:0;
+  let qA=est['antec'].on?parseInt(est['antec'].qtd)||0:0,qF=est['fora'].on?parseInt(est['fora'].qtd)||0:0;
+  let tot=(f+m+s+qA+qF)-qE-qH-qM;if(tot<0)tot=0;document.getElementById('total').innerText=tot;
+}
+function toggleTheme(){document.body.classList.toggle('dark');document.getElementById('btnTheme').innerText=document.body.classList.contains('dark')?'☀️':'🌙';localStorage.setItem('tema',document.body.classList.contains('dark')?'dark':'light');}
+if(localStorage.getItem('tema')=='dark'){document.body.classList.add('dark');document.getElementById('btnTheme').innerText='☀️';}
+render();calc();
+
+
+
+
+function fmt(id){let s=est[id];if(!s.on)return'NÃO HOUVE.';let o=lista.find(x=>x.id===id);if(o.tipo=='LOTE'){return`QTDE.: ${s.qtd||0} | FORNECEDOR: ${s.forn||'-'} | LOTE: ${s.lote||'-'}`;}else{return`QTDE.: ${s.qtd||0} | FORNECEDOR: ${s.forn||'-'} | MOTIVO: ${s.motivo||'-'}`;}}
+function gerarPDF(){
+ const {jsPDF}=window.jspdf;const doc=new jsPDF();const AZUL=[19,42,84];const CINZA=[241,245,249];
+ let dataRaw=document.getElementById('dataAbate').value;if(!dataRaw){alert("⚠️ PREENCHA A DATA!");return;}
+ if(!document.getElementById('prevista').value){alert("⚠️ PREENCHA A QTDE. DA ESCALA!");return;}
+ let dataAbate=dataRaw.split('-').reverse().join('/');
+ let agora=new Date();let dataGer=agora.toLocaleDateString('pt-BR');let horaGer=agora.toLocaleTimeString('pt-BR').slice(0,5);
+ let resp=document.getElementById('resp').value.toUpperCase()||'CELSO';let y=0;const M=8,W=194;
+ doc.setFillColor(...AZUL);doc.rect(0,0,210,20,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('EMPRESA: 2143 JBS S.A | UNIDADE CDT',M,6);
+ doc.setFontSize(12);doc.text('RELATÓRIO DE ENCERRAMENTO DO RECEBIMENTO DE ANIMAIS',M,13);
+ doc.setFontSize(7);doc.setFont('helvetica','normal');doc.text(`RESP: ${resp} | GERADO EM ${dataGer}, ÀS ${horaGer}.`,M,17);y=22;
+ function card(x,t,v,w){let h=13;doc.setFillColor(255,255,255);doc.setDrawColor(203,213,225);doc.roundedRect(x,y,w,h,2,2,'FD');doc.setFontSize(6);doc.setFont('helvetica','bold');doc.setTextColor(...AZUL);doc.text(t,x+2,y+5);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(15,23,42);doc.text(String(v),x+2,y+11);}
+ card(M,'DATA DO ABATE',dataAbate,32);
+ card(M+34,'QTDE. PREVISTA EM ESCALA',document.getElementById('prevista').value,38);
+ card(M+74,'QTDE. DE FÊMEAS REC.',document.getElementById('femeas').value||'0',34);
+ card(M+110,'QTDE. DE MACHOS REC.',document.getElementById('machos').value||'0',34);
+ card(M+146,'QTDE. DE ANIMAIS NOS CURRAIS',document.getElementById('total').innerText,48);
+ y+=17;
+ let totRecebido=(parseInt(document.getElementById('femeas').value)||0)+(parseInt(document.getElementById('machos').value)||0);
+ function tabela(titulo,linhas){doc.setFillColor(...AZUL);doc.rect(M,y,W,7.5,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text(titulo,M+2,y+5);y+=7.5;linhas.forEach((l,i)=>{let a=doc.splitTextToSize(l[0],55);let b=doc.splitTextToSize(l[1],110);let h=Math.max(a.length,b.length)*4+3;if(h<7.5)h=7.5;doc.setFillColor(...(i%2==0?CINZA:[255,255,255]));doc.rect(M,y,W,h,'F');doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(15,23,42);doc.text(a,M+2,y+4.5);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(30,41,59);doc.text(b,M+80,y+4.5);y+=h;});y+=2.5;}
+ tabela('1. RESUMO OPERACIONAL',[['QTDE. DE ANIMAIS REC. NO DIA:',totRecebido+''],['SOBRAS DO ABATE ANTERIOR:',(document.getElementById('sobras').value||'0')+''],['QTDE. DE CURRAIS UTILIZADOS:',(document.getElementById('curraisUsados').value||'0')+''],['QTDE. DE LOTES NA ESCALA:',(document.getElementById('qtdLotes').value||'0')+''],['HOR. DE CHEGADA DO 1º VEÍCULO:',(document.getElementById('primeiro').value||'00:00')+''],['HOR. DE CHEG. DO ÚLTIMO VEÍCULO:',(document.getElementById('ultimo').value||'00:00')+''],]);
+ tabela('2. OCORRÊNCIAS',[['ABATE DE EMERGÊNCIA:',fmt('emerg')],['NECROPSIA | INCINERAÇÃO:',fmt('human')],['ANIMAIS MORTOS NO TRANSPORTE:',fmt('mortos')],['ANIMAIS NÃO RECEBIDOS:',fmt('naoRec')],['ANIMAIS ANTECIPADOS:',fmt('antec')],['ANIMAIS FORA DA ESCALA:',fmt('fora')],]);
+ let d1=document.getElementById('c1').checked?'CONFERIDAS E ENCAMINHADAS AO SIF':'PENDENTE';let d2=document.getElementById('c2').checked?'CONFERIDAS E ENCAMINHADAS À ORIGINAÇÃO':'PENDENTE';let d3=document.getElementById('c3').checked?'CONFERIDA E ENCAMINHADA À GQ':'PENDENTE';let d4=document.getElementById('c4').checked?'PREENCHIDAS E ENCAMINHADAS AOS CURRAIS':'PENDENTE';
+ tabela('3. CONFERÊNCIAS E DOCUMENTAÇÃO',[['FICHAS DOS CURRAIS:',d4],['MINUTAS E NOTAS FISCAIS:',d2],['FICHA DE ALIMENTAÇÃO DOS ANIMAIS:',d3],['GTAs, CARTAS DE GARANTIA E DECLARAÇÕES MODELO B:',d1]]);
+ let obs=(document.getElementById('obs').value||'').toUpperCase();let obsL=doc.splitTextToSize(obs,W-6);if(obsL.length>3)obsL=obsL.slice(0,3);let obsH=obsL.length*4+10;doc.setFillColor(248,250,252);doc.setDrawColor(203,213,225);doc.roundedRect(M,y,W,obsH,2,2,'FD');doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...AZUL);doc.text('OBSERVAÇÕES GERAIS:',M+2,y+5);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(30,41,59);doc.text(obsL,M+2,y+9);
+ doc.setFontSize(5);doc.setTextColor(100,116,139);doc.text(`Usuário logado: ${resp} | Uso interno e restrito | Copyright © 2026 GDRA v2 by Celso | ${dataGer}, ${horaGer} | Página 1/1`,M,290);
+ doc.save(`Relatorio_do_recebimento_${dataGer.replace(/\//g,'-')}.pdf`);
+}
+</script>
+<div class="footer" style="
+  margin-top: 24px;
+  padding: 12px;
+  text-align: center;
+  font-size: 11px;
+  color: #64748b;
+  border-top: 1px solid #e2e8f0;
+">
+  <b style="color:#16a34a">Copyright © 2026 GDRA v2 by Celso</b><br>
+ Uso interno e restrito.
+</div>
+</body>
+</html>
